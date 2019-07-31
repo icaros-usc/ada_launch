@@ -5,8 +5,15 @@
 
    <!-- load controllers -->
    <rosparam file="$(find ada_launch)/config/controllers.yaml" command="load" />
+
+   <!-- run transforms --> 
+   <node pkg="tf" type="static_transform_publisher" name="camera_publisher" args=" -0.31 0.31 0.88 0 -1.57 1.57 /camera_depth_optical_frame /map 100" />
+
+   <!-- launch kinect with openni --> 
+   <include file="$(find openni_launch)/launch/openni.launch">
+   </include>
    
-<!-- the controller node itself -->
+   <!-- the controller node itself -->
    <node pkg="jaco_hardware"
           name="ros_control_kinova_jaco"
           type="jaco_hardware"
@@ -33,6 +40,7 @@
 
    <node name="st_map2world" pkg="tf" type="static_transform_publisher" respawn="false" output="screen"
       args="0 0 0 0 0 0 1 map world 10"/>
+   
 
 
   <group unless="$(arg feeding)">
@@ -55,6 +63,7 @@
     <node pkg="food_detector" type="run_sim_food_detector.py" name="food_detector"
           output="screen" cwd="node" unless="$(arg perception)"/>
   </group>
-
+   
+    
 </launch>
 
